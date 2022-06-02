@@ -5,17 +5,17 @@
 git clone https://github.com/dappuniversity/starter_kit
 
 ## Requirements:
-node.js
-metamask
-ganache
+node.js, metamask & ganache
 
+## Dapp University tutorial:
+https://www.youtube.com/watch?v=sCE-fQJAVQ4
 
-## 1 To start it, simply run: 
+### 1. To start it, simply run: 
 
 npm install
 npm run start
 
-### 3. Make sure truggle -g is installed
+### 2. Make sure truggle -g is installed
 
 # use truffle compiile 
 (compile contracts)
