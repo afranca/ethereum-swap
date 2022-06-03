@@ -56,13 +56,44 @@ contract('EthSwap', ([deployer, investor]) =>{
             assert.equal(ethSwapEtherBalance.toString(),web3.utils.toWei('1','ether') )            
 
             // Check PurchaseToken event was emitted
-            console.log(result.logs)
+            // console.log(result.logs)
             const event = result.logs[0].args
             assert.equal(event.account, investor)
             assert.equal(event.token, token.address)
             assert.equal(event.amount.toString(), tokens('100').toString())
             assert.equal(event.rate.toString(),'100')
         })
-    })    
+    })   
+    
+
+    describe('EthSwap sellTokens()', async ()=>{
+        let result
+        before(async ()=>{
+            // Investor must approve transactio
+            await token.approve(ethSwap.address, tokens('100'), {from: investor});
+            // Investor sells the tokens
+            result = await ethSwap.sellTokens(tokens('100'),{from: investor});
+        })        
+
+        it('Allow users to sell tokens to EthSwap for a fixed price', async ()=>{ 
+            // Check investor token balance after purchase
+            let investorBalance = await token.balanceOf(investor)
+            assert.equal(investorBalance.toString(), tokens('0')) 
+            
+            // Check EthSwap balanaces after purchase
+            let ethSwapTokenBalance = await token.balanceOf(ethSwap.address)
+            assert.equal(ethSwapTokenBalance.toString(),'1000000000000000000000000' )
+            let ethSwapEtherBalance = await web3.eth.getBalance(ethSwap.address)
+            assert.equal(ethSwapEtherBalance.toString(),web3.utils.toWei('0','ether') )   
+
+            // Check TokenSold event was emitted
+            const event = result.logs[0].args
+            assert.equal(event.account, investor)
+            assert.equal(event.token, token.address)
+            assert.equal(event.amount.toString(), tokens('100').toString())
+            assert.equal(event.rate.toString(),'100')
+
+        })
+    })      
 
 })
