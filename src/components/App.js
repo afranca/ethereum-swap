@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import logo from '../logo.png';
 import './App.css';
 import Web3 from 'web3';
 import Navbar from './Navbar';
+import EthSwap from '../abis/EthSwap.json'
+import Token from '../abis/Token.json'
 
 class App extends Component {
 
@@ -14,12 +15,34 @@ class App extends Component {
 
   async loadBloackchainData(){
     const web3 = window.web3
+   
     const accounts = await web3.eth.getAccounts()
     this.setState({account: accounts[0]})
-    console.log("State.account: "+this.state.account)
+    
     const ethBalance = await web3.eth.getBalance(this.state.account)
     this.setState({ethBalance: ethBalance})
-    console.log("State.ethBalance: "+this.state.ethBalance)
+
+    const networkId = await web3.eth.net.getId()
+    // Load Token
+    const tokenData = Token.networks[networkId]
+    if (tokenData){
+      const token = new web3.eth.Contract(Token.abi, tokenData.address)
+      this.setState({ token: token })
+      let tokenBalance = await token.methods.balanceOf(this.state.account).call()
+      this.setState({ tokenBalance: tokenBalance.toString()})
+    } else{
+      window.alert('Token contract not deployed to detected network')
+    }
+
+    // Load EthSwap
+    const ethSwapData = EthSwap.networks[networkId]
+    if (ethSwapData){
+      const ethSwap = new web3.eth.Contract(EthSwap.abi, ethSwapData.address)
+      this.setState({ ethSwap })
+    } else{
+      window.alert('EthSwap contract not deployed to detected network')
+    }
+
   }
 
   // This is how you hook it up with Metamask (Provided by Metamask)
@@ -40,7 +63,10 @@ class App extends Component {
     super(props)
     this.state = { 
       account: '',
-      ethBalance: '0'
+      ethBalance: '0',
+      token: {},
+      tokenBalance: '0',
+      ethSwap: {}
     }
   }
 
