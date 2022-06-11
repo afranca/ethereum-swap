@@ -44,6 +44,8 @@ class App extends Component {
       window.alert('EthSwap contract not deployed to detected network')
     }
 
+    this.setState({ loading: false })
+
   }
 
   // This is how you hook it up with Metamask (Provided by Metamask)
@@ -67,11 +69,19 @@ class App extends Component {
       ethBalance: '0',
       token: {},
       tokenBalance: '0',
-      ethSwap: {}
+      ethSwap: {},
+      loading: true
     }
   }
 
   render() {
+    let content
+    if(this.state.loading){
+      content = <p id="loader" className='text-center'>Loading ...</p>
+    }else{
+      content = <Main/>
+    }
+
     return (
       <div>
         <Navbar account = {this.state.account}/>
@@ -79,9 +89,7 @@ class App extends Component {
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
-
-                <Main/>
-               
+                { content }
               </div>
             </main>
           </div>
