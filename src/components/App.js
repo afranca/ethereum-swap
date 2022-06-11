@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Web3 from 'web3';
 import Navbar from './Navbar';
+import Main from './Main';
 import EthSwap from '../abis/EthSwap.json'
 import Token from '../abis/Token.json'
 
@@ -79,7 +80,7 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
 
-                <h1>Hello World</h1>
+                <Main/>
                
               </div>
             </main>
