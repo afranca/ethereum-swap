@@ -19,7 +19,16 @@ class Main extends Component {
 
           <div className="card-body">
 
-          <form className="mb-3">
+          <form className="mb-3" onSubmit={(event) =>{
+            event.preventDefault()
+            let etherAmount
+            etherAmount = this.input.value.toString()
+            //console.log("Purchasing tokens Ether: "+etherAmount)
+            etherAmount = window.web3.utils.toWei(etherAmount, 'Ether')
+            //console.log("Purchasing tokens Wei: "+etherAmount)
+            this.props.buyTokens(etherAmount)
+            
+          }}>
             <div>
               <label className="float-left"><b>Input</b></label>
               <span className="float-right text-muted">
@@ -30,7 +39,7 @@ class Main extends Component {
               <input
                 type="text" 
                 onChange={(event) => {
-                  console.log("changing ...")
+                  //console.log("changing ...")
                   const etherAmount = this.input.value.toString()
                   this.setState({
                     output: etherAmount * 100
